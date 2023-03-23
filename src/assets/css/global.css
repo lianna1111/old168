@@ -1,0 +1,48 @@
+/* 公共css */
+html,
+body,
+#app{
+    /* height: 100%; */
+   position: relative;
+
+    border: 0;
+    margin: 0;
+}
+ 
+li p {
+    /* margin:5px; */
+    cursor:default!important
+  }
+
+  li .active {
+    background-color: #8d3535;
+    color: #fff;
+  } 
+
+  .news-list .page-header:hover {
+    padding: 20px;
+    transition: padding 0.5s;
+    background-color: #eee !important;
+  }
+
+
+#cnzz_stat_icon_1280712237{
+  position: absolute;
+  bottom: 10px;
+  right: 50%;
+  transform: translateX(50%);
+}
+
+/* @media screen and  (max-width: 375px) {
+  #cnzz_stat_icon_1280712237{
+  
+
+  }
+} */
+
+body{
+  -webkit-text-size-adjust: 100% !important;
+  text-size-adjust: 100% !important;
+  -moz-text-size-adjust: 100% !important;
+  }
+  

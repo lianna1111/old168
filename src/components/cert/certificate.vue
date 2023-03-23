@@ -1,0 +1,168 @@
+<template>
+  <div>
+    <form method="post" class="form" @submit.prevent>
+      <div class="row">
+        <div class="col-9">
+          <div class="input-box">
+            <img src="../../assets/images/certid.png" alt="" />
+            <input
+              type="text"
+              class="form-control"
+              name="inputCertID"
+              placeholder="请输入证书编号"
+              v-model="cert"
+            />
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-9">
+          <div class="input-box">
+            <img src="../../assets/images/user.png" alt="" />
+            <input
+              type="text"
+              class="form-control"
+              name="inputuname"
+              placeholder="请输入姓名"
+              v-model="uname"
+            />
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-9">
+          <div class="input-box">
+            <img src="../../assets/images/id.png" alt="" />
+            <input
+              type="text"
+              class="form-control"
+              name="inputID"
+              placeholder="请输入身份证号"
+              v-model="idcard"
+            />
+          </div>
+        </div>
+      </div>
+      <div class="row d-flex flex-row justify-content-center">
+        <button class="btn" @click="search">查询</button
+        ><button class="btn" @click="empty">重填</button>
+      </div>
+      <div class="msg">
+        <span style="font-weight: 600">查询步骤：
+        1、点选右侧查询分类  </span
+        >2、输入姓名+证书编号+身份证号查询
+      </div>
+    </form>
+    <div class="alert alert-danger notice" role="alert">
+      {{ notice }}
+    </div>
+    <div class="cert-detail" v-for="(item, index) in messeage" :key="index">
+      <table class="table table-bordered">
+        <tbody>
+          <tr>
+            <th scope="row">发证时间：</th>
+            <td>{{ item.kaoshishijian }}</td>
+            <th scope="row">姓名：</th>
+            <td>{{ item.xingming }}</td>
+          </tr>
+          <tr>
+            <th scope="row">性别：</th>
+            <td>{{ item.xingbei }}</td>
+            <th scope="row">出生日期：</th>
+            <td>{{ item.chushengriqi }}</td>
+          </tr>
+          <tr>
+            <th scope="row">证书编号：</th>
+            <td>{{ item.zhengshubianhao }}</td>
+            <th scope="row">考级专业：</th>
+            <td>{{ item.kaojileixing }}</td>
+          </tr>
+          <tr>
+            <th scope="row">等级：</th>
+            <td>{{ item.baokaodengji }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</template>
+
+<script>
+import axios from "axios";
+
+import common from "../../assets/js/common";
+var cid = 1;
+export default {
+  name: "certficate",
+  data() {
+    return {
+      type: 1,
+      cert: "",
+      uname: "",
+      idcard: "",
+      notice: "",
+      messeage: "",
+    };
+  },
+  methods: {
+    empty() {
+      this.cert = "";
+      this.idcard = "";
+      this.uname = "";
+      this.messeage = "";
+      this.notice = "";
+      $(".notice").css("display", "none");
+    },
+    search() {
+      var that = this;
+      that.notice = "";
+      that.messeage = "";
+      $(".notice").css("display", "none");
+      if (that.cert != "" && that.uname != "") {
+        axios({
+          method: "POST",
+          url: common.domain + "oldata/search",
+          data: { cid: cid, cert: that.cert, uname: that.uname },
+          headers: {
+            token: common.token,
+          },
+        }).then(function (res) {
+          if (res.data.errno === 0) {
+            that.messeage = res.data.msg;
+            console.log(that.messeage);
+            if (res.data.msg.length) {
+              // alert("成功");
+            } else if (that.cert && that.uname) {
+              // alert("失败");
+              that.notice = "查询失败，请确认输入是否正确";
+              $(".notice").css("display", "block");
+            }
+          }
+        });
+        axios({
+          method: "POST",
+          url: common.domain + "oldata/add",
+          data: {
+            cid: cid,
+            cert: that.cert,
+            uname: that.uname,
+            idcard: that.idcard,
+          },
+          headers: {
+            token: common.token,
+          },
+        }).then(function () {
+          // alert("查询成功");
+        });
+      } else {
+        alert("输入不能为空");
+      }
+    },
+  },
+};
+</script>
+
+
+<style >
+</style>
